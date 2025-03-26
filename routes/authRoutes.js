@@ -14,8 +14,8 @@ router.get('/get-profile', authenticateToken, getProfile);
 router.get('/verify-token', authenticateToken, verifyTokenForLocal);
 
 router.post("/logout", (req, res) => {
-    res.clearCookie("token", { httpOnly: true, sameSite: "Lax" });
-    return res.json({ success: true, message: "Logged out successfully" });
+        res.clearCookie('accessToken', { httpOnly: true, secure: true, sameSite: 'Strict' });
+        res.status(200).send({ message: 'Logged out successfully' });
 });
 
 
