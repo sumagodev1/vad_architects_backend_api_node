@@ -13,12 +13,12 @@ app.use((req, res, next) => {
   next();
 });
 //const allowedOrigin = "http://localhost:5174";
-app.use(
-  cors({
-    origin: true,           // Allow all origins
-    credentials: true,      // Allow credentials (cookies, authorization headers)
-  })
-);
+// app.use(
+//   cors({
+//     origin: true,           // Allow all origins
+//     credentials: true,      // Allow credentials (cookies, authorization headers)
+//   })
+// );
 
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
