@@ -31,15 +31,15 @@ app.use("/uploads", express.static("uploads"));
 const sequelize = require("./config/database");
 const authRoutes = require("./routes/authRoutes");
 const headerContactRoutes = require("./routes/headerContactRoutes");
-// const socialContactRoutes = require("./routes/SocialContactRoute");
-// const testimonialRoutes = require("./routes/testimonialRoutes");
+const socialContactRoutes = require("./routes/SocialContactRoute");
+const testimonialRoutes = require("./routes/testimonialRoutes");
 // const infrastructureRoutes = require("./routes/infrastructureRoute");
 // const carrousalRoutes = require('./routes/carrousalRoutes');
-// const homeSliderRoutes = require('./routes/homeSliderRoutes');
-// const uploadCVRoutes = require('./routes/uploadCVRoutes');
+const homeSliderRoutes = require('./routes/homeSliderRoutes');
+const uploadCVRoutes = require('./routes/uploadCVRoutes');
 // const contactPersonRoutes = require('./routes/contactPersonRoutes');
 // const officeRoutes = require('./routes/officeRoutes');
-// const carousalFormRoutes = require('./routes/carousalFormRoutes');
+const carousalFormRoutes = require('./routes/carousalFormRoutes');
 // const requestCallbackFormRoutes = require('./routes/requestCallbackFormRoutes');
 // const subscribeRoutes = require('./routes/subscribeRoutes');
 // const getInTouchRoutes = require('./routes/getInTouchRoutes');
@@ -51,7 +51,7 @@ const headerContactRoutes = require("./routes/headerContactRoutes");
 // const productAggregateRoutes = require('./routes/productAggregateRoutes');
 // const blogDetailRoutes = require('./routes/blogDetailRoutes');
 // const newsRoutes = require('./routes/newsRoutes');
-// const teamRoutes = require('./routes/teamRoutes');
+const teamRoutes = require('./routes/teamRoutes');
 // const eventRoutes = require('./routes/eventRoutes');
 // const OueleadersRoutes = require('./routes/OueleadersRoutes');
 
@@ -61,17 +61,17 @@ const headerContactRoutes = require("./routes/headerContactRoutes");
 // const about = require('./routes/aboutRoutes');
 
 // new modearch api
-// const categoryRoutes = require('./routes/categoryRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 // const projectNameRoutes = require('./routes/projectNameRoutes');
-// const projectDetailsRoutes = require('./routes/projectDetailsRoutes');
-// const projectDetailsWithImagesRoutes = require('./routes/projectDetailsWithImagesRoutes')
-// const galleryDetailsRoutes = require('./routes/galleryDetailsRoutes');
-// const galleryImagesRoutes = require('./routes/galleryImagesRoutes')
+const projectDetailsRoutes = require('./routes/projectDetailsRoutes');
+const projectDetailsWithImagesRoutes = require('./routes/projectDetailsWithImagesRoutes')
+const galleryDetailsRoutes = require('./routes/galleryDetailsRoutes');
+const galleryImagesRoutes = require('./routes/galleryImagesRoutes')
 // app.use("/uploads", express.static("uploads"));
 
 // app.use('/about', about);
 // app.use('/leadership', leadershipRoutes);
-// app.use('/team', teamRoutes);
+app.use('/team', teamRoutes);
 // app.use('/news', newsRoutes);
 // app.use('/events', eventRoutes);
 // app.use('/OueleadersRoutes', OueleadersRoutes);
@@ -81,17 +81,17 @@ const headerContactRoutes = require("./routes/headerContactRoutes");
 // app.use('/getintouch', getInTouchRoutes);
 // app.use('/subscribe', subscribeRoutes);
 // app.use('/requestcallbackform', requestCallbackFormRoutes);
-// app.use('/carousal-form', carousalFormRoutes);
+app.use('/carousal-form', carousalFormRoutes);
 // app.use('/office', officeRoutes);
 // app.use('/contactperson', contactPersonRoutes);
 app.use("/auth", authRoutes);
 app.use("/header-contact", headerContactRoutes);
-// app.use("/social-contact", socialContactRoutes);
-// app.use("/testimonials", testimonialRoutes);
+app.use("/social-contact", socialContactRoutes);
+app.use("/testimonials", testimonialRoutes);
 // app.use("/infrastructure", infrastructureRoutes);
 // app.use('/carrousal', carrousalRoutes);
-// app.use('/homeslider', homeSliderRoutes);
-// app.use('/uploadcv', uploadCVRoutes);
+app.use('/homeslider', homeSliderRoutes);
+app.use('/uploadcv', uploadCVRoutes);
 // app.use('/technicalData', technicalDataRoutes);
 // app.use('/optionsData', optionsDataRoutes);
 // app.use('/applicationData',ApplicationRoutes);
@@ -100,12 +100,12 @@ app.use("/header-contact", headerContactRoutes);
 // app.use('/productImages', productImagesRouter);
 
 // new modearch api
-// app.use('/category', categoryRoutes);
+app.use('/category', categoryRoutes);
 // app.use('/projectName', projectNameRoutes);
-// app.use('/projectDetails', projectDetailsRoutes);
-// app.use('/projectDetailsWithImages',projectDetailsWithImagesRoutes)
-// app.use('/galleryDetails',galleryDetailsRoutes)
-// app.use('/galleryImages',galleryImagesRoutes)
+app.use('/projectDetails', projectDetailsRoutes);
+app.use('/projectDetailsWithImages',projectDetailsWithImagesRoutes)
+app.use('/galleryDetails',galleryDetailsRoutes)
+app.use('/galleryImages',galleryImagesRoutes)
 
 // Test DB connection
 const testDbConnection = async () => {
