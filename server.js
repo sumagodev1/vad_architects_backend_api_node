@@ -13,9 +13,11 @@ app.use((req, res, next) => {
   next();
 });
 //const allowedOrigin = "http://localhost:5174";
+const allowedOrigin = "https://staging-admin.vadarchitects.com/";
 app.use(
   cors({
-    origin: true,           // Allow all origins
+    origin: allowedOrigin,  
+    // origin: true,           // Allow all origins
     credentials: true,      // Allow credentials (cookies, authorization headers)
   })
 );
