@@ -20,7 +20,7 @@ const loginUser = async (req, res) => {
     // Find the user by email
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return apiResponse.notFoundResponse(res, 'User not found');
+      return apiResponse.notFoundResponse(res, 'User not found please enter correct user', 'email');
     }
     console.log("=============FFFF")
 
@@ -28,7 +28,7 @@ const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password); // bcrypt comparison
 
     if (!isMatch) {
-      return apiResponse.unauthorizedResponse(res, 'Invalid credentials');
+      return apiResponse.unauthorizedResponse(res, 'Invalid credentials please enter correct credentials', 'password');
     }
     console.log("=============Matcheddddddd")
 
