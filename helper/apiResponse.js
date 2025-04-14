@@ -38,10 +38,11 @@ exports.ErrorBadRequestResponseWithData = function (res, msg,data) {
 	};
 	return res.status(400).json(resData);
 };
-exports.notFoundResponse = function (res, msg) {
+exports.notFoundResponse = function (res, msg, field = null) {
 	var resData = {
 		result: false,
 		message: msg,
+		errorField: field
 	};
 	return res.status(404).json(resData);
 };
@@ -55,10 +56,11 @@ exports.validationErrorWithData = function (res, msg, data) {
 	return res.status(400).json(resData);
 };
 
-exports.unauthorizedResponse = function (res, msg) {
+exports.unauthorizedResponse = function (res, msg, field = null) {
 	var data = {
 		result: false,
 		message: msg,
+		errorField: field
 	};
 	return res.status(401).json(data);
 };
