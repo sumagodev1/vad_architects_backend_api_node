@@ -19,6 +19,10 @@ const Contact = sequelize.define('userForm', {
     allowNull: false,
     // unique: true, // Make mobile field unique
   },
+  subject: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   message: {
     type: DataTypes.TEXT,
     allowNull: true,

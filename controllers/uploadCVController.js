@@ -60,7 +60,7 @@ exports.addUploadCV = async (req, res) => {
       email,
       phone,
       subject,
-      message,
+      // message,
       cv,
       isActive: true,
       isDelete: false,

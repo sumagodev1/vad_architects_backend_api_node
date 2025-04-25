@@ -48,23 +48,23 @@ const nodemailer = require('nodemailer');
 
 exports.addContact = async (req, res) => {  
   try {
-    const { name, email, mobile, message } = req.body;
+    const { name, email, mobile, message, subject } = req.body;
 
     console.log("Received contact form data:", req.body);
 
     // Validate input
-    if (!name || !email || !mobile || !message) {
+    if (!name || !email || !mobile || !subject || !message) {
       console.error("Missing required fields");
       return apiResponse.ErrorResponse(res, "All fields are required");
     }
 
     // Save contact in the database
-    const contact = await Contact.create({ name, email, mobile, message });
+    const contact = await Contact.create({ name, email, mobile, subject, message });
     console.log("Contact saved to DB:", contact);
 
     // Send confirmation email
     console.log("Calling sendEmailToUser...");
-    await sendEmailToUser(email, name, mobile, message);
+    await sendEmailToUser(email, name, mobile, message, subject);
     console.log("Email function executed successfully.");
 
     return apiResponse.successResponseWithData(res, 'Contact added successfully', contact);
@@ -74,8 +74,8 @@ exports.addContact = async (req, res) => {
   }
 };
 
-const sendEmailToUser = async (email, name, mobile, message) => {
-  console.log("sendEmailToUser function is called with:", email, name, mobile, message);
+const sendEmailToUser = async (email, name, mobile, message, subject) => {
+  console.log("sendEmailToUser function is called with:", email, name, mobile, message, subject);
 
   try {
     console.log("Creating Gmail transporter...");
@@ -96,7 +96,7 @@ const sendEmailToUser = async (email, name, mobile, message) => {
       to: process.env.EMAIL_SENT_TO,
       cc:process.env.EMAIL_USER,
       subject: `${name} wants to contact you`,
-      text: `Dear Admin,\n\n${name} wants to contact you. Below are their details:\n\nName: ${name}\nMobile: ${mobile}\nEmail: ${email}\nMessage: ${message}\n\nBest regards,\nModArchSteel`,
+      text: `Dear Admin,\n\n${name} wants to contact you. Below are their details:\n\nName: ${name}\nMobile: ${mobile}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}\n\nBest regards,\nModArchSteel`,
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
           <p><b>Dear Admin,</b></p>
@@ -117,6 +117,10 @@ const sendEmailToUser = async (email, name, mobile, message) => {
             <tr>
               <td style="border: 1px solid #ddd; padding: 8px;">Email</td>
               <td style="border: 1px solid #ddd; padding: 8px;"><a href="mailto:${email}" style="color: #007BFF; text-decoration: none;">${email}</a></td>
+            </tr>
+            <tr style="background-color: #f9f9f9;">
+              <td style="border: 1px solid #ddd; padding: 8px;">Subject</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${subject}</td>
             </tr>
             <tr style="background-color: #f9f9f9;">
               <td style="border: 1px solid #ddd; padding: 8px;">Message</td>
