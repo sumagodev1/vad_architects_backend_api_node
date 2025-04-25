@@ -20,10 +20,10 @@ const UploadCV = sequelize.define('cvLists', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  message: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
+  // message: {
+  //   type: DataTypes.TEXT,
+  //   allowNull: false,
+  // },
   cv: {
     type: DataTypes.STRING,
     allowNull: true,
