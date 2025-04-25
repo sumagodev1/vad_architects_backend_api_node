@@ -296,6 +296,11 @@ const createProject = async (req, res) => {
       clientImgPath = `uploads/projectDetailsWithImages/${req.files["client_img"][0].filename}`;
     }
 
+    let heroImgPath = null;
+    if (req.files["hero_img"] && req.files["hero_img"].length > 0) {
+      heroImgPath = `uploads/projectDetailsWithImages/${req.files["hero_img"][0].filename}`;
+    }
+
     // Check if the project name already exists in the same category and is not deleted
     const existingProject = await ProjectDetailsWithImages.findOne({
       where: {
@@ -331,6 +336,7 @@ const createProject = async (req, res) => {
       client_review,
       star,
       client_img: clientImgPath,
+      hero_img: heroImgPath
     });
 
     res.status(201).json({ message: "Project created successfully!", project });
@@ -405,6 +411,11 @@ const updateProjectImages = async (req, res) => {
           clientImgPath = `uploads/projectDetailsWithImages/${req.files["client_img"][0].filename}`;
         }
 
+        let heroImgPath = project.hero_img; // Keep existing hero image by default
+        if (req.files["hero_img"] && req.files["hero_img"].length > 0) {
+          heroImgPath = `uploads/projectDetailsWithImages/${req.files["hero_img"][0].filename}`;
+        }
+
     // Parse existing images properly (ensure it's always an array)
     let existingImages = project.project_images;
     if (typeof existingImages === "string") {
@@ -441,6 +452,7 @@ const updateProjectImages = async (req, res) => {
     project.client_review = client_review || project.client_review;
     project.star = star || project.star;
     project.client_img = clientImgPath;
+    project.hero_img = heroImgPath;
 
     // Save the updated project
     await project.save();

@@ -18,6 +18,8 @@ const ProjectDetailsWithImages = sequelize.define(
     after_description: { type: DataTypes.TEXT, allowNull: false }, // After description
     detailed_description: { type: DataTypes.TEXT, allowNull: false }, 
 
+    hero_img: { type: DataTypes.STRING, allowNull: false }, // Single before image
+
     client_name: { type: DataTypes.TEXT, allowNull: true },
     client_designation: { type: DataTypes.TEXT, allowNull: true },
     client_review: { type: DataTypes.TEXT, allowNull: true },

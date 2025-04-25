@@ -6,7 +6,8 @@ const {
   updateProjectDetails,
   getProjectDetails,
   isActiveStatus,
-  isDeleteStatus
+  isDeleteStatus,
+  toggleFeatureProject
 } = require('../controllers/projectDetailsController');
 const authenticateToken = require('../middleware/auth');
 
@@ -18,5 +19,7 @@ router.get('/get-projectDetails', getProjectDetails);
 router.get('/find-projectDetails', authenticateToken, getProjectDetails);
 router.put('/isactive-projectDetails/:id', authenticateToken, validateProjectDetailsId, isActiveStatus);
 router.delete('/isdelete-projectDetails/:id', authenticateToken, validateProjectDetailsId, isDeleteStatus);
+
+router.put('/feature-project/:id', authenticateToken, validateProjectDetailsId, toggleFeatureProject);
 
 module.exports = router;
