@@ -26,6 +26,10 @@ const ProjectDetails = sequelize.define('project_deatils', {
   project_year_of_completion: { type: DataTypes.STRING, allowNull: false },
   project_total_tonnage: { type: DataTypes.STRING, allowNull: true },
   project_status: { type: DataTypes.STRING, allowNull: true },
+  is_feature_project: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false, // Default is off (0)
+  },
   isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,

@@ -49,6 +49,7 @@ router.post(
     { name: "after_img", maxCount: 1 },
     { name: "project_images", maxCount: 10 },
     { name: "client_img", maxCount: 1 },
+    { name: "hero_img", maxCount: 1 },
   ]),
   authenticateToken,
   createProject
@@ -62,6 +63,7 @@ router.put(
     { name: "after_img", maxCount: 1 },
     { name: "project_images", maxCount: 10 },
     { name: "client_img", maxCount: 1 },
+    { name: "hero_img", maxCount: 1 },
   ]), authenticateToken,
   updateProjectImages
 );
