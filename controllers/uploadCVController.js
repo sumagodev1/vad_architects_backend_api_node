@@ -84,17 +84,17 @@ exports.addUploadCV = async (req, res) => {
   }
 };
 
-const sendCVEmail = async (name, email, phone, subject, message, cv) => {
-  console.log("sendCVEmail function is called with:", name, email, phone, subject, message, cv);
+const sendCVEmail = async (name, email, phone, subject, cv) => {
+  console.log("sendCVEmail function is called with:", name, email, phone, subject, cv);
 
   try {
     console.log("Creating Gmail transporter...");
     
     const transporter = nodemailer.createTransport({
-      service: "gmail",
-      // host: process.env.EMAIL_HOST,  
-      // port: process.env.EMAIL_PORT,  
-      // secure: process.env.EMAIL_SECURE === "true", 
+      // service: "gmail",
+      host: process.env.EMAIL_HOST,  
+      port: process.env.EMAIL_PORT,  
+      secure: process.env.EMAIL_SECURE === "true", 
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -109,7 +109,7 @@ const sendCVEmail = async (name, email, phone, subject, message, cv) => {
       cc:process.env.EMAIL_USER,
       // to: 'vivekpatilss23@gmail.com',
       subject: `New CV Uploaded by ${name}`,
-      text: `Dear Admin,\n\n${name} has uploaded a CV. Below are their details:\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}\nCV: ${cv}\n\nBest regards,\nYour Website`,
+      text: `Dear Admin,\n\n${name} has uploaded a CV. Below are their details:\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nSubject: ${subject}\nCV: ${cv}\n\nBest regards,\nYour Website`,
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
           <p><b>Dear Admin,</b></p>
@@ -134,10 +134,6 @@ const sendCVEmail = async (name, email, phone, subject, message, cv) => {
             <tr style="background-color: #f9f9f9;">
               <td style="border: 1px solid #ddd; padding: 8px;">Subject</td>
               <td style="border: 1px solid #ddd; padding: 8px;">${subject}</td>
-            </tr>
-            <tr>
-              <td style="border: 1px solid #ddd; padding: 8px;">Message</td>
-              <td style="border: 1px solid #ddd; padding: 8px;">${message}</td>
             </tr>
             <tr style="background-color: #f9f9f9;">
               <td style="border: 1px solid #ddd; padding: 8px;">CV</td>
