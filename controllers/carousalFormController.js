@@ -78,11 +78,14 @@ const sendEmailToUser = async (email, name, mobile, message, subject) => {
   console.log("sendEmailToUser function is called with:", email, name, mobile, message, subject);
 
   try {
-    console.log("Creating Gmail transporter...");
+    // console.log("Creating Gmail transporter...");
     
     // Use Nodemailer with Gmail
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      // service: 'gmail',
+      host: process.env.EMAIL_HOST,  
+      port: process.env.EMAIL_PORT,  
+      secure: process.env.EMAIL_SECURE === "true", 
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
