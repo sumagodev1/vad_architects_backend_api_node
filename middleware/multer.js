@@ -24,11 +24,23 @@ const storage = multer.diskStorage({
 });
 
 // File filter to only allow certain image types
+// const fileFilter = (req, file, cb) => {
+//   const ext = path.extname(file.originalname);
+//   if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.mp4' && ext !== '.avi' && ext !== '.mov') {
+//     return cb(new Error('Only media files are allowed'), false);
+//   }
+//   cb(null, true);
+// };
+
+// File filter to allow media and document files
 const fileFilter = (req, file, cb) => {
-  const ext = path.extname(file.originalname);
-  if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.mp4' && ext !== '.avi' && ext !== '.mov') {
-    return cb(new Error('Only media files are allowed'), false);
+  const allowedExtensions = ['.png', '.jpg', '.jpeg', '.mp4', '.avi', '.mov', '.pdf', '.doc', '.docx'];
+  const ext = path.extname(file.originalname).toLowerCase();
+
+  if (!allowedExtensions.includes(ext)) {
+    return cb(new Error('Only media and document files are allowed'), false);
   }
+
   cb(null, true);
 };
 
