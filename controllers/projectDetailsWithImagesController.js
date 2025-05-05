@@ -482,16 +482,20 @@ const getProjectById = async (req, res) => {
     // const project = await ProjectDetailsWithImages.findByPk(id);
 
     const { project_name_id  } = req.params; // Get project_name_id  from request parameters
-    const project = await ProjectDetailsWithImages.findOne({
-      where: { project_name_id  },  // Query by project_name_id 
+    // const project = await ProjectDetailsWithImages.findOne({
+      const projects = await ProjectDetailsWithImages.findAll({
+      where: { project_name_id, isDelete: false, isActive: false  },  // Query by project_name_id 
     });
 
 
-    if (!project) {
-      return res.status(404).json({ message: "Project not found" });
+    // if (!projects) {
+    //   return res.status(404).json({ message: "Project not found" });
+    // }
+    if (!projects || projects.length === 0) {
+      return res.status(404).json({ message: "No active project found" });
     }
 
-    res.status(200).json(project);
+    res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
