@@ -165,6 +165,7 @@ const { Op } = require("sequelize");
 
 const sequelize = require('../config/database'); // Import the sequelize instance
 const ProjectDetailsWithImages = require("../models/ProjectDetailsWithImages");
+const { safeToggleProjectDelete } = require('../services/projectDetailsService');
 
 exports.updateProjectDetails = async (req, res) => {
   const transaction = await sequelize.transaction(); // Start a transaction
@@ -304,16 +305,17 @@ exports.isActiveStatus = async (req, res) => {
 exports.isDeleteStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const ProjectDetails1 = await ProjectDetails.findByPk(id);
+    const result = await safeToggleProjectDelete(id);
 
-    if (!ProjectDetails1) {
-      return apiResponse.notFoundResponse(res, 'Project Details not found');
+    if (!result.success) {
+      if (result.statusCode === 404) {
+        return apiResponse.notFoundResponse(res, result.message);
+      }
+      // 409 — project is referenced in ProjectDetailsWithImages
+      return apiResponse.conflictResponse(res, result.message);
     }
 
-    ProjectDetails1.isDelete = !ProjectDetails1.isDelete;
-    await ProjectDetails1.save();
-
-    return apiResponse.successResponseWithData(res, 'Project Details delete status updated successfully', ProjectDetails1);
+    return apiResponse.successResponseWithData(res, result.message, result.data);
   } catch (error) {
     console.error('Toggle Project Details delete status failed', error);
     return apiResponse.ErrorResponse(res, 'Toggle Project Details delete status failed');
@@ -329,59 +331,48 @@ exports.toggleFeatureProject = async (req, res) => {
       return apiResponse.notFoundResponse(res, "Project not found");
     }
 
-    // If the project is active and not deleted
-    if (project.isActive && !project.isDelete) {
-      // The logic for when the project is active goes here
+    // Soft-deleted projects cannot be modified
+    if (project.isDelete) {
+      return apiResponse.validationErrorWithData(
+        res,
+        "Cannot modify a deleted project."
+      );
+    }
 
-      // Count how many projects have is_feature_project set to true and are active and not deleted
-      const activeprojects = await ProjectDetails.count({
+    // Block featuring an inactive project — allow un-featuring regardless of active state
+    if (!project.isActive && !project.is_feature_project) {
+      return apiResponse.validationErrorWithData(
+        res,
+        "Cannot make an inactive project featured. Please activate the project first."
+      );
+    }
+
+    // Enforce the 4-project cap only when enabling the feature (not when disabling)
+    if (!project.is_feature_project) {
+      const featuredCount = await ProjectDetails.count({
         where: {
           is_feature_project: true,
-          isActive: true,  // Ensure the projects are active
-          isDelete: false, // Ensure the projects are not deleted
+          isActive: true,
+          isDelete: false,
         },
       });
 
-      // If there are already 4 projects with is_feature_project as true and the current project is not featured
-      if (activeprojects >= 4 && !project.is_feature_project) {
+      if (featuredCount >= 4) {
         return apiResponse.validationErrorWithData(
           res,
           "Only 4 projects can be featured at a time. Please deactivate one to activate another."
         );
       }
-
-      // Toggle the value of is_feature_project
-      project.is_feature_project = !project.is_feature_project;
-      await project.save();
-
-      return apiResponse.successResponseWithData(
-        res,
-        "Project feature status updated successfully",
-        project
-      );
-    } else {
-      // Else case: If the project is inactive (isActive = false)
-      // Allow the toggle of is_feature_project status even if inactive
-      if (project.is_feature_project && !project.isActive) {
-        // Allow deactivation of featured status if the project is inactive
-        project.is_feature_project = false;
-        await project.save();
-        return apiResponse.successResponseWithData(
-          res,
-          "Project feature status deactivated successfully",
-          project
-        );
-      }
-
-      // If the project is inactive but not featured (is_feature_project = false), prevent enabling the feature
-      if (!project.is_feature_project && !project.isActive) {
-        return apiResponse.validationErrorWithData(
-          res,
-          "Cannot make an inactive project featured. Please activate the project first."
-        );
-      }
     }
 
+    project.is_feature_project = !project.is_feature_project;
+    await project.save();
+
+    return apiResponse.successResponseWithData(
+      res,
+      "Project feature status updated successfully",
+      project
+    );
   } catch (error) {
     console.error("Toggle feature project failed", error);
     return apiResponse.ErrorResponse(res, "Error toggling feature status");

@@ -138,6 +138,7 @@ exports.addCategory = async (req, res) => {
 const sequelize = require('../config/database'); // Import the sequelize instance
 const ProjectDetails = require('../models/ProjectDetails');
 const ProjectDetailsWithImages = require("../models/ProjectDetailsWithImages");
+const { safeToggleCategoryDelete } = require('../services/categoryService');
 
 exports.updateCategory = async (req, res) => {
   const transaction = await sequelize.transaction(); // Start a transaction
@@ -352,25 +353,19 @@ exports.isActiveStatus = async (req, res) => {
 exports.isDeleteStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const Category1 = await Category.findByPk(id);
+    const result = await safeToggleCategoryDelete(id);
 
-    if (!Category1) {
-      return apiResponse.notFoundResponse(res, "Category not found");
+    if (!result.success) {
+      if (result.statusCode === 404) {
+        return apiResponse.notFoundResponse(res, result.message);
+      }
+      // 409 — category is actively referenced in project records
+      return apiResponse.conflictResponse(res, result.message);
     }
 
-    Category1.isDelete = !Category1.isDelete;
-    await Category1.save();
-
-    return apiResponse.successResponseWithData(
-      res,
-      "Category delete status updated successfully",
-      Category1
-    );
+    return apiResponse.successResponseWithData(res, result.message, result.data);
   } catch (error) {
     console.error("Toggle Category delete status failed", error);
-    return apiResponse.ErrorResponse(
-      res,
-      "Toggle Category delete status failed"
-    );
+    return apiResponse.ErrorResponse(res, "Toggle Category delete status failed");
   }
 };

@@ -64,3 +64,11 @@ exports.unauthorizedResponse = function (res, msg, field = null) {
 	};
 	return res.status(401).json(data);
 };
+
+exports.conflictResponse = function (res, msg) {
+	var resData = {
+		result: false,
+		message: msg,
+	};
+	return res.status(409).json(resData);
+};
